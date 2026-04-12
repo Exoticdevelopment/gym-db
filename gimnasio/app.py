@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import oracledb as cx_Oracle
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "gymdb_secret_2026"
 
 # ─── CONFIGURACIÓN DE CONEXIÓN ORACLE ────────────────────────────────────────
-# Cambia estos datos según el servidor del profesor
-DB_USER     = "tu_usuario"
-DB_PASSWORD = "tu_contrasena"
-DB_DSN      = "localhost:1521/XEPDB1"   # host:puerto/servicio
+# Los datos se cargan desde .env; si no existen, usa valores por defecto
+DB_USER     = os.getenv("DB_USER", "tu_usuario")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "tu_contrasena")
+DB_DSN      = os.getenv("DB_DSN", "localhost:1521/XEPDB1")   # host:puerto/servicio
 
 def get_connection():
     """Retorna una conexión a Oracle. Lanza excepción si falla."""
