@@ -3,16 +3,19 @@ import oracledb as cx_Oracle
 from dotenv import load_dotenv
 import os
 
+# ─── MODO THICK para Oracle 11g ──────────────────────────────────────────────
+# Necesario porque oracledb moderno no soporta Oracle 11g en modo thin
+cx_Oracle.init_oracle_client(lib_dir=r"C:\oraclexe\app\oracle\product\11.2.0\server\bin")
+
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "gymdb_secret_2026"
 
 # ─── CONFIGURACIÓN DE CONEXIÓN ORACLE ────────────────────────────────────────
-# Los datos se cargan desde .env; si no existen, usa valores por defecto
-DB_USER     = os.getenv("DB_USER", "tu_usuario")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "tu_contrasena")
-DB_DSN      = os.getenv("DB_DSN", "localhost:1521/XEPDB1")   # host:puerto/servicio
+DB_USER     = os.getenv("DB_USER", "system")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Admin1234")
+DB_DSN      = os.getenv("DB_DSN", "localhost:1521/XE")
 
 def get_connection():
     """Retorna una conexión a Oracle. Lanza excepción si falla."""
@@ -41,22 +44,23 @@ def index():
 
         # Reservas recientes para el dashboard
         cur.execute("""
-            SELECT r.id_reserva, cl.nombre, cl.apellido,
-                   c.nombre, r.fecha_reserva, r.estado
-            FROM RESERVA r
-            JOIN CLIENTE cl ON cl.id_cliente = r.id_cliente
-            JOIN CLASE   c  ON c.id_clase    = r.id_clase
-            ORDER BY r.fecha_reserva DESC
-            FETCH FIRST 10 ROWS ONLY
+            SELECT * FROM (
+                SELECT r.id_reserva, cl.nombre AS nombre_cli, cl.apellido,
+                       c.nombre AS nombre_clase, r.fecha_reserva, r.estado
+                FROM RESERVA r
+                JOIN CLIENTE cl ON cl.id_cliente = r.id_cliente
+                JOIN CLASE   c  ON c.id_clase    = r.id_clase
+                ORDER BY r.fecha_reserva DESC
+            ) WHERE ROWNUM <= 10
         """)
         reservas_recientes = [
             {
-                "id_reserva":      row[0],
-                "nombre_cliente":  row[1],
+                "id_reserva":       row[0],
+                "nombre_cliente":   row[1],
                 "apellido_cliente": row[2],
-                "nombre_clase":    row[3],
-                "fecha_reserva":   row[4].strftime("%Y-%m-%d") if row[4] else "",
-                "estado":          row[5],
+                "nombre_clase":     row[3],
+                "fecha_reserva":    row[4].strftime("%Y-%m-%d") if row[4] else "",
+                "estado":           row[5],
             }
             for row in cur.fetchall()
         ]
@@ -100,16 +104,16 @@ def index():
         """)
         clases = [
             {
-                "id_clase":           row[0],
-                "nombre":             row[1],
-                "descripcion":        row[2],
-                "fecha":              row[3].strftime("%Y-%m-%d") if row[3] else "",
-                "hora_inicio":        row[4],
-                "hora_fin":           row[5],
-                "capacidad_max":      row[6],
-                "id_instructor":      row[7],
-                "nombre_instructor":  row[8],
-                "apellido_instructor":row[9],
+                "id_clase":            row[0],
+                "nombre":              row[1],
+                "descripcion":         row[2],
+                "fecha":               row[3].strftime("%Y-%m-%d") if row[3] else "",
+                "hora_inicio":         row[4],
+                "hora_fin":            row[5],
+                "capacidad_max":       row[6],
+                "id_instructor":       row[7],
+                "nombre_instructor":   row[8],
+                "apellido_instructor": row[9],
             }
             for row in cur.fetchall()
         ]
@@ -143,13 +147,13 @@ def index():
     except Exception as e:
         flash(f"Error de conexión a BD: {e}. Mostrando interfaz sin datos.", "error")
         total_clientes = 0
-        total_clases = 0
+        total_clases   = 0
         total_reservas = 0
         reservas_recientes = []
-        clientes = []
+        clientes     = []
         instructores = []
-        clases = []
-        reservas = []
+        clases       = []
+        reservas     = []
 
     return render_template(
         "index.html",
@@ -172,7 +176,6 @@ def crear_cliente():
     conn = get_connection()
     cur  = conn.cursor()
     try:
-        # Sentencia preparada — previene SQL Injection
         cur.execute("""
             INSERT INTO CLIENTE (cedula, nombre, apellido, email, telefono, fecha_registro)
             VALUES (:1, :2, :3, :4, :5, SYSDATE)
