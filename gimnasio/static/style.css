@@ -1,0 +1,325 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ── NAVBAR ─────────────────────────────────── */
+.navbar {
+  background: #1a1d27;
+  border-bottom: 1px solid #2d3148;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-right: 32px;
+  letter-spacing: 0.3px;
+}
+
+.brand-dot { color: #6366f1; }
+
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+  height: 100%;
+}
+
+.nav-tab {
+  padding: 0 18px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #94a3b8;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.nav-tab:hover { color: #e2e8f0; }
+
+.nav-tab.active {
+  color: #6366f1;
+  border-bottom-color: #6366f1;
+  font-weight: 500;
+}
+
+/* ── FLASH MESSAGES ─────────────────────────── */
+#flash-container {
+  padding: 0 24px;
+}
+
+.flash {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.flash-success { background: #0d2e1a; color: #4ade80; border: 1px solid #166534; }
+.flash-error   { background: #2e0d0d; color: #f87171; border: 1px solid #7f1d1d; }
+.flash-info    { background: #0d1a3a; color: #60a5fa; border: 1px solid #1e3a5f; }
+
+/* ── LAYOUT ─────────────────────────────────── */
+.content { padding: 24px; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+/* ── STATS ──────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #1a1d27;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #2d3148;
+}
+
+.stat-num {
+  font-size: 32px;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* ── TABLA ──────────────────────────────────── */
+.table-wrap {
+  background: #1a1d27;
+  border-radius: 10px;
+  border: 1px solid #2d3148;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #141720;
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #2d3148;
+}
+
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #1e2235;
+  color: #cbd5e1;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e2235; }
+
+td.acciones { display: flex; gap: 6px; align-items: center; }
+
+.empty {
+  text-align: center;
+  padding: 32px;
+  color: #475569;
+  font-size: 13px;
+}
+
+/* ── BADGES ─────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-activa     { background: #0d2e1a; color: #4ade80; }
+.badge-cancelada  { background: #2e0d0d; color: #f87171; }
+.badge-completada { background: #1a1a2e; color: #818cf8; }
+
+/* ── BOTONES ─────────────────────────────────── */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-primary { background: #6366f1; color: #fff; }
+.btn-primary:hover { background: #5558e3; }
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.btn-edit   { background: #1e3a5f; color: #60a5fa; }
+.btn-edit:hover { background: #1e4a7a; }
+
+.btn-delete { background: #3b1219; color: #f87171; }
+.btn-delete:hover { background: #4a1520; }
+
+.btn-save {
+  background: #6366f1;
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-save:hover { background: #5558e3; }
+
+.btn-cancel {
+  background: #1e2130;
+  color: #94a3b8;
+  padding: 9px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-cancel:hover { background: #252840; }
+
+/* ── FORMULARIOS ────────────────────────────── */
+.form-overlay {
+  background: #141720;
+  border-radius: 12px;
+  border: 1px solid #2d3148;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  background: #0f1117;
+  border: 1px solid #2d3148;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #e2e8f0;
+  font-size: 13px;
+  outline: none;
+  transition: border 0.15s;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #6366f1;
+}
+
+.form-group select option {
+  background: #1a1d27;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ── SEARCH BAR ─────────────────────────────── */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  background: #1a1d27;
+  border: 1px solid #2d3148;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #e2e8f0;
+  font-size: 13px;
+  outline: none;
+  flex: 1;
+  transition: border 0.15s;
+}
+
+.search-bar input:focus {
+  border-color: #6366f1;
+}
