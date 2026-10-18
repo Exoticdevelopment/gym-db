@@ -2,19 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import oracledb as cx_Oracle
 from dotenv import load_dotenv
 import os
-
-# ─── MODO THICK para Oracle 11g ──────────────────────────────────────────────
-# Necesario porque oracledb moderno no soporta Oracle 11g en modo thin
-cx_Oracle.init_oracle_client(lib_dir=r"C:\oraclexe\app\oracle\product\11.2.0\server\bin")
+import secrets
 
 load_dotenv()
 
-app = Flask(__name__)
-app.secret_key = "gymdb_secret_2026"
+# ─── MODO THICK para Oracle 11g ──────────────────────────────────────────────
+# oracledb moderno no soporta Oracle 11g en modo thin. Si defines
+# ORACLE_CLIENT_DIR (carpeta bin del cliente Oracle), se activa el modo thick;
+# con Oracle 12c o superior puedes dejarla vacía.
+ORACLE_CLIENT_DIR = os.getenv("ORACLE_CLIENT_DIR")
+if ORACLE_CLIENT_DIR:
+    cx_Oracle.init_oracle_client(lib_dir=ORACLE_CLIENT_DIR)
 
-# ─── CONFIGURACIÓN DE CONEXIÓN ORACLE ────────────────────────────────────────
-DB_USER     = os.getenv("DB_USER", "system")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Admin1234")
+app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY") or secrets.token_hex(32)
+
+# ─── CONFIGURACIÓN DE CONEXIÓN ORACLE (desde .env) ───────────────────────────
+DB_USER     = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_DSN      = os.getenv("DB_DSN", "localhost:1521/XE")
 
 def get_connection():
